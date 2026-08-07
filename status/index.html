@@ -1,27 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Status</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>cloudzzy - status</title>
+
+<style>
+:root{
+    --bg:#0d1117;
+    --card:#161b22;
+    --border:#30363d;
+    --text:#e6edf3;
+    --muted:#8b949e;
+    --accent:#58a6ff;
+    --green:#3fb950;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    display:flex;
+    justify-content:center;
+    padding:40px 20px;
+}
+
+.container{
+    width:100%;
+    max-width:760px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:28px;
+    margin-bottom:20px;
+}
+
+h1{
+    font-size:2.2rem;
+    margin-bottom:6px;
+}
+
+.subtitle{
+    color:var(--muted);
+    margin-bottom:24px;
+}
+
+h2{
+    margin-bottom:10px;
+    margin-top:18px;
+}
+
+p{
+    line-height:1.7;
+    color:var(--text);
+}
+
+ul{
+    margin-left:20px;
+    line-height:1.8;
+}
+
+a{
+    color:var(--accent);
+    text-decoration:none;
+}
+
+a:hover{
+    text-decoration:underline;
+}
+
+.footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:.9rem;
+    margin-top:10px;
+}
+</style>
 </head>
+
 <body>
 
-<h1>Status</h1>
+<div class="container">
 
-<p><strong>Discord status:</strong> ✅ Active</p>
+<div class="card">
 
-<h2>Current Discord account</h2>
-<p>@tuff.kid</p>
+<h1>cloudzzy status</h1>
 
-<h2>Official statement</h2>
-<p>
-This page is the official source for my Discord identity.
-If my Discord account is ever banned, deleted, hacked, or changed,
-my new official account will be announced here first.
+<p class="subtitle">
+account status
 </p>
 
-<h2>Last updated</h2>
-<p>2026-08-07</p>
+<h2>Status</h2>
+
+<p>
+<strong>Active</strong>
+</p>
+
+<h2>Current Discord</h2>
+
+<p>
+<strong>tuff.kid</strong>
+</p>
+
+<h2>Identity</h2>
+
+<p>
+If my Discord account is ever banned, deleted, hacked, renamed, or replaced,
+my new official account will always be announced here first.
+</p>
+
+<p style="margin-top:12px;">
+If an account, message, or announcement conflicts with the information on this page,
+assume that <strong>this page is correct.</strong>
+</p>
+
+<h2>Verification</h2>
+
+<p>
+To verify that you're looking at the real me:
+</p>
+
+<ul>
+<li>This page is hosted on my GitHub Pages website.</li>
+<li>Any new Discord account will appear here before I announce it elsewhere.</li>
+<li>If a Discord account isn't listed here, it isn't officially mine.</li>
+</ul>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://github.com/cloudzzyy">GitHub</a></li>
+<li><a href="https://cloudzzyy.github.io/">Homepage</a></li>
+</ul>
+
+<h2>Previous Accounts</h2>
+
+<p>
+None.
+</p>
+
+<h2>Last Updated</h2>
+
+<p>
+7 August 2026
+</p>
+
+</div>
+
+<div class="footer">
+Hosted with GitHub Pages, cloudzzyy.github.io
+</div>
+
+</div>
 
 </body>
 </html>
