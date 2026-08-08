@@ -549,6 +549,14 @@ a.link-row:hover .link-arrow{ transform: translate(2px, -2px); color: var(--acce
   outline-offset: 2px;
 }
 
+/* Used briefly and synchronously by script.js to measure a nav item's
+   true expanded width without its label transition being mid-flight.
+   Never visible — added and removed within a single JS tick. */
+.navbar.no-anim,
+.navbar.no-anim *{
+  transition: none !important;
+}
+
 /* ====================================================================
    REDUCED MOTION
    ==================================================================== */
