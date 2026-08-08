@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cloudzzy — identity &amp; status</title>
+<meta name="description" content="Official identity and Discord status record for cloudzzy.">
+
+<!-- One external font (JetBrains Mono), used only for data/ledger
+     fields — usernames, dates, the changelog. Body copy uses the
+     system font stack, so the page still reads fine if this
+     never loads. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ==================================================================
+   TOKENS
+   Every color, font, radius and spacing value the page uses lives
+   here. Change the look of the whole site from this one block.
+   ================================================================== */
+:root{
+  --bg:             #09090a;
+  --surface:        #131316;
+  --surface-hover:  #1a1a1e;
+  --border:         #232327;
+  --border-strong:  #2f2f34;
+  --text:           #ececee;
+  --text-dim:       #99999f;
+  --text-faint:     #5a5a60;
+  --accent:         #d9a441;
+  --accent-soft:    rgba(217, 164, 65, 0.14);
+  --online:         #5ed889;
+
+  --radius:  10px;
+  --radius-sm: 6px;
+
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --max-width: 640px;
+}
+
+/* ==================================================================
+   RESET & BASE
+   ================================================================== */
+*, *::before, *::after{ box-sizing: border-box; }
+html{ -webkit-text-size-adjust: 100%; }
+
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* faint ambient texture so the black isn't completely flat */
+body{
+  background-image:
+    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(217,164,65,0.06), transparent 60%);
+  background-repeat: no-repeat;
+}
+
+a{ color: inherit; text-decoration: none; }
+
+h1, h2, h3, p{ margin: 0; }
+
+::selection{
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ==================================================================
+   LAYOUT
+   ================================================================== */
+.page{
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: clamp(28px, 8vw, 56px) 20px 40px;
+}
+
+section{
+  margin-top: clamp(36px, 6vw, 52px);
+}
+
+.eyebrow{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 14px;
+}
+
+.eyebrow::before{
+  content: "";
+  width: 14px;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+/* ==================================================================
+   HEADER
+   ================================================================== */
+.header{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.header-top{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.name{
+  font-size: clamp(30px, 7vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.record-tag{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  background: var(--accent-soft);
+  padding: 4px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.record-tag svg{ width: 11px; height: 11px; }
+
+.tagline{
+  font-size: 16px;
+  color: var(--text-dim);
+  max-width: 46ch;
+}
+
+.aside-note{
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+/* ==================================================================
+   STATUS CARD  (data: DISCORD USERNAME, STATUS, LAST UPDATED DATE)
+   ================================================================== */
+.status-card{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: clamp(20px, 4vw, 28px);
+  display: grid;
+  gap: 20px;
+}
+
+.status-row{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-dot{
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--online);
+  flex-shrink: 0;
+}
+
+.status-dot::after{
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid var(--online);
+  opacity: 0.5;
+  animation: pulse 2.4s ease-out infinite;
+}
+
+@keyframes pulse{
+  0%   { transform: scale(0.6); opacity: 0.55; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+.status-label{
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.status-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.status-field dt{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 6px;
+}
+
+.status-field dd{
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.copy-btn{
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  padding: 3px 7px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.copy-btn:hover{
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.verified-line{
+  font-size: 13px;
+  color: var(--text-faint);
+}
+
+.verified-line strong{
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+/* ==================================================================
+   ACCOUNTS / LINKS  (data: LINKS)
+   ================================================================== */
+.link-list{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.link-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px 18px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.link-row:last-child{ border-bottom: none; }
+
+a.link-row:hover,
+a.link-row:focus-visible{
+  background: var(--surface-hover);
+}
+
+.link-left{
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.link-name{
+  font-size: 14px;
+  color: var(--text-dim);
+  width: 76px;
+  flex-shrink: 0;
+}
+
+.link-value{
+  font-family: var(--mono);
+  font-size: 14.5px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link-arrow{
+  color: var(--text-faint);
+  flex-shrink: 0;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+a.link-row:hover .link-arrow{
+  transform: translateX(2px);
+  color: var(--accent);
+}
+
+/* ==================================================================
+   VERIFICATION
+   ================================================================== */
+.verify-block{
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(20px, 4vw, 26px);
+  background:
+    linear-gradient(180deg, rgba(217,164,65,0.05), transparent 40%),
+    var(--surface);
+}
+
+.verify-block p{
+  color: var(--text-dim);
+  font-size: 15px;
+  max-width: 54ch;
+}
+
+.verify-block p + p{ margin-top: 12px; }
+
+.verify-block strong{
+  color: var(--text);
+  font-weight: 600;
+}
+
+.verify-corner{
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+/* ==================================================================
+   CHANGE LOG  (data: CHANGELOG ENTRIES)
+   ================================================================== */
+.log{
+  border-left: 1px solid var(--border-strong);
+  padding-left: 20px;
+  display: grid;
+  gap: 22px;
+}
+
+.log-entry{ position: relative; }
+
+.log-entry::before{
+  content: "";
+  position: absolute;
+  left: -25px;
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+}
+
+.log-date{
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+.log-text{
+  margin-top: 4px;
+  font-size: 14.5px;
+  color: var(--text-dim);
+}
+
+/* ==================================================================
+   PREVIOUS ACCOUNTS  (data: PREVIOUS ACCOUNTS)
+   ================================================================== */
+.empty-state{
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  padding: 18px;
+  text-align: center;
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.prev-list{
+  display: grid;
+  gap: 10px;
+}
+
+.prev-row{
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text-dim);
+}
+
+.prev-row .reason{ color: var(--text-faint); }
+
+/* ==================================================================
+   FOOTER
+   ================================================================== */
+footer{
+  margin-top: clamp(48px, 8vw, 64px);
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+footer a:hover{ color: var(--accent); }
+
+/* ==================================================================
+   ENTRANCE ANIMATION — subtle, staggered, respects reduced motion
+   ================================================================== */
+.header, .status-card, .link-list, .verify-block, .log, .prev-content, footer{
+  animation: rise 0.5s ease both;
+}
+.header{ animation-delay: 0s; }
+.status-card{ animation-delay: 0.05s; }
+.link-list{ animation-delay: 0.1s; }
+.verify-block{ animation-delay: 0.15s; }
+.log{ animation-delay: 0.2s; }
+.prev-content{ animation-delay: 0.2s; }
+footer{ animation-delay: 0.25s; }
+
+@keyframes rise{
+  from{ opacity: 0; transform: translateY(6px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+}
+
+/* ==================================================================
+   RESPONSIVE
+   ================================================================== */
+@media (max-width: 480px){
+  .status-grid{ grid-template-columns: 1fr; }
+  .link-name{ width: 66px; font-size: 13px; }
+  .record-tag{ order: -1; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============================================================
+       1. HEADER / IDENTITY
+       ============================================================ -->
+  <header class="header">
+    <div class="header-top">
+      <h1 class="name">cloudzzy</h1>
+      <span class="record-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        official record
+      </span>
+    </div>
+    <p class="tagline">Identity &amp; status — the permanent source of truth for my Discord account.</p>
+    <p class="aside-note">account status for my discord. check back regularly if you want. still working on this so dont call it atrocious.</p>
+  </header>
+
+  <!-- ============================================================
+       2. CURRENT STATUS
+       Edit: STATUS TEXT, DISCORD USERNAME, LAST UPDATED DATE
+       ============================================================ -->
+  <section aria-labelledby="status-heading">
+    <div class="eyebrow" id="status-heading">Current status</div>
+
+    <div class="status-card">
+      <div class="status-row">
+        <span class="status-dot" aria-hidden="true"></span>
+        <!-- STATUS TEXT -->
+        <span class="status-label">regularly online</span>
+      </div>
+
+      <dl class="status-grid">
+        <div class="status-field">
+          <dt>Discord</dt>
+          <!-- DISCORD USERNAME -->
+          <dd>
+            tuff.kid
+            <button class="copy-btn" type="button" data-copy="tuff.kid">copy</button>
+          </dd>
+        </div>
+        <div class="status-field">
+          <dt>Last verified</dt>
+          <!-- LAST UPDATED DATE — keep the datetime attribute in
+               sync with the visible date; the JS below reads it. -->
+          <dd><time datetime="2026-08-08" id="last-updated-time">8 Aug 2026</time></dd>
+        </div>
+      </dl>
+
+      <p class="verified-line" id="relative-verified"></p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. OFFICIAL ACCOUNTS / LINKS
+       Edit: add/remove .link-row entries. Non-link rows (like
+       Discord, which has no public profile URL) omit the href.
+       ============================================================ -->
+  <section aria-labelledby="accounts-heading">
+    <div class="eyebrow" id="accounts-heading">Official accounts</div>
+
+    <div class="link-list">
+      <div class="link-row">
+        <div class="link-left">
+          <span class="link-name">Discord</span>
+          <span class="link-value">tuff.kid</span>
+        </div>
+        <button class="copy-btn" type="button" data-copy="tuff.kid">copy</button>
+      </div>
+
+      <a class="link-row" href="https://github.com/cloudzzyy" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-name">GitHub</span>
+          <span class="link-value">github.com/cloudzzyy</span>
+        </div>
+        <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+
+      <a class="link-row" href="https://cloudzzyy.github.io/" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-name">Website</span>
+          <span class="link-value">cloudzzyy.github.io</span>
+        </div>
+        <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+
+      <a class="link-row" href="https://guns.lol/cloudzzy" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-name">guns.lol</span>
+          <span class="link-value">guns.lol/cloudzzy</span>
+        </div>
+        <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. IDENTITY / VERIFICATION
+       ============================================================ -->
+  <section aria-labelledby="verify-heading">
+    <div class="eyebrow" id="verify-heading">Verification</div>
+
+    <div class="verify-block">
+      <span class="verify-corner">SOURCE OF TRUTH</span>
+      <p>This page is the <strong>only official source</strong> for my Discord identity. If my account is ever banned, deleted, hacked, renamed, or replaced, my new active account will be announced here first — before anywhere else.</p>
+      <p>If any account, message, or announcement conflicts with what's written here, assume <strong>this page is correct</strong>, not the account.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. CHANGE LOG
+       Edit: add a new .log-entry to the TOP of this list for
+       every update. Newest first.
+       ============================================================ -->
+  <section aria-labelledby="log-heading">
+    <div class="eyebrow" id="log-heading">Change log</div>
+
+    <div class="log">
+
+      <!-- New entries go above this line -->
+
+      <div class="log-entry">
+        <div class="log-date">8 August 2026</div>
+        <div class="log-text">Identity/status page established.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. PREVIOUS ACCOUNTS
+       Edit: replace .empty-state with a .prev-list of .prev-row
+       items once there's history to record, e.g.:
+       <div class="prev-list">
+         <div class="prev-row"><span>old.name</span><span class="reason">renamed — Jan 2026</span></div>
+       </div>
+       ============================================================ -->
+  <section aria-labelledby="prev-heading">
+    <div class="eyebrow" id="prev-heading">Previous accounts</div>
+
+    <div class="prev-content">
+      <div class="empty-state">none on record</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       7. FOOTER
+       ============================================================ -->
+  <footer>
+    <span>cloudzzy</span>
+    <span>last updated <span id="footer-date">8 August 2026</span></span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // -- Relative "verified" time, computed from the <time> element's
+  //    datetime attribute so it only needs to be updated in one place.
+  var timeEl = document.getElementById("last-updated-time");
+  var relativeEl = document.getElementById("relative-verified");
+  if (timeEl && relativeEl) {
+    var updated = new Date(timeEl.getAttribute("datetime") + "T00:00:00");
+    var days = Math.floor((Date.now() - updated.getTime()) / 86400000);
+    var phrase;
+    if (days <= 0) phrase = "verified today";
+    else if (days === 1) phrase = "verified 1 day ago";
+    else if (days < 30) phrase = "verified " + days + " days ago";
+    else phrase = "verified over a month ago";
+    relativeEl.textContent = phrase + ".";
+  }
+
+  // -- Copy-to-clipboard for the Discord username.
+  document.querySelectorAll("[data-copy]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var value = btn.getAttribute("data-copy");
+      var reset = btn.textContent;
+      var done = function(){
+        btn.textContent = "copied";
+        setTimeout(function(){ btn.textContent = reset; }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done).catch(function(){});
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = value;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); done(); } catch(e){}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
