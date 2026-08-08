@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>cloudzzy — identity &amp; status</title>
+<meta name="description" content="Official identity and Discord status record for cloudzzy.">
+<meta name="theme-color" content="#0a0b0f">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+  <span class="a1"></span>
+  <span class="a2"></span>
+  <span class="a3"></span>
+</div>
+
+<div class="page">
+  <div class="shell glass">
+
+    <!-- ==============================================================
+         STATUS
+         Edit: DISCORD USERNAME, STATUS TEXT, LAST VERIFIED DATE
+         ============================================================== -->
+    <section class="view active" id="status">
+      <div class="identity">
+        <span class="brand-name">cloudzzy</span>
+        <span class="record-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          official
+        </span>
+      </div>
+
+      <p class="tagline">account status for my discord. check back regularly if you want. still working on this so dont call it atrocious.</p>
+
+      <div class="divider"></div>
+
+      <!-- DISCORD USERNAME -->
+      <span class="discord-name">
+        tuff.kid
+        <button class="copy-btn" type="button" data-copy="tuff.kid">copy</button>
+      </span>
+
+      <div class="status-live">
+        <span class="status-dot" aria-hidden="true"></span>
+        <!-- STATUS TEXT -->
+        <span class="label">Regularly online</span>
+        <span class="sep">·</span>
+        <!-- LAST VERIFIED DATE -->
+        <span class="verified">verified 8 August 2026</span>
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         ACCOUNTS
+         Edit: add/remove .link-row entries. Discord has no href —
+         Discord profiles have no public URL.
+         ============================================================== -->
+    <section class="view" id="accounts">
+      <div class="area-heading"><span class="bar"></span><h2>Official accounts</h2></div>
+
+      <div class="link-row">
+        <div class="link-left">
+          <span class="link-name">Discord</span>
+          <span class="link-value">tuff.kid</span>
+        </div>
+        <button class="copy-btn" type="button" data-copy="tuff.kid">copy</button>
+      </div>
+
+      <a class="link-row" href="https://github.com/cloudzzyy" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-name">GitHub</span>
+          <span class="link-value">github.com/cloudzzyy</span>
+        </div>
+        <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+
+      <a class="link-row" href="https://cloudzzyy.github.io/" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-name">Website</span>
+          <span class="link-value">cloudzzyy.github.io</span>
+        </div>
+        <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+
+      <a class="link-row" href="https://guns.lol/cloudzzy" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-name">guns.lol</span>
+          <span class="link-value">guns.lol/cloudzzy</span>
+        </div>
+        <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+    </section>
+
+    <!-- ==============================================================
+         VERIFY
+         ============================================================== -->
+    <section class="view" id="verify">
+      <div class="area-heading"><span class="bar"></span><h2>Verification</h2></div>
+
+      <div class="verify-text">
+        <p>If my Discord account is ever banned, deleted, hacked, renamed, or replaced, my new account (and active) will always be announced here first.</p>
+        <p>If an account, message, or announcement conflicts with the information on here, assume that <strong>this page is correct</strong>, not the account.</p>
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         HISTORY  (change log + previous accounts)
+         Edit: add a new .log-entry to the TOP of the log for every
+         update. Replace .prev-empty with a .prev-list of .prev-row
+         items once there's history to record, e.g.:
+         <div class="prev-list">
+           <div class="prev-row"><span>old.name</span><span class="reason">renamed — Jan 2026</span></div>
+         </div>
+         ============================================================== -->
+    <section class="view" id="history">
+      <div class="area-heading"><span class="bar"></span><h2>Change log</h2></div>
+
+      <div class="log">
+
+        <!-- New entries go above this line -->
+
+        <div class="log-entry">
+          <div class="log-date">8 August 2026</div>
+          <div class="log-text">Identity/status page established.</div>
+        </div>
+
+      </div>
+
+      <div class="sub-divider"></div>
+
+      <div class="area-heading small"><span class="bar"></span><h2>Previous accounts</h2></div>
+
+      <div class="prev-empty">none on record</div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ==================================================================
+     NAVIGATION — one glass capsule, four items. data-target values
+     must match the section ids above (status, accounts, verify,
+     history).
+     ================================================================== -->
+<nav class="navbar" aria-label="Section navigation">
+  <div class="nav-pill" aria-hidden="true"></div>
+  <div class="nav-travel" aria-hidden="true"><span></span></div>
+
+  <button class="nav-item active" type="button" data-target="status" aria-current="true">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" opacity="0.4"/></svg>
+    </span>
+    <span class="nav-label"><span>Status</span></span>
+  </button>
+
+  <button class="nav-item" type="button" data-target="accounts" aria-current="false">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.66 0l2-2a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-2 2a4 4 0 0 0 5.66 5.66l1-1"/></svg>
+    </span>
+    <span class="nav-label"><span>Accounts</span></span>
+  </button>
+
+  <button class="nav-item" type="button" data-target="verify" aria-current="false">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
+    </span>
+    <span class="nav-label"><span>Verify</span></span>
+  </button>
+
+  <button class="nav-item" type="button" data-target="history" aria-current="false">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+    </span>
+    <span class="nav-label"><span>History</span></span>
+  </button>
+</nav>
+
+<script src="script.js"></script>
+</body>
+</html>
