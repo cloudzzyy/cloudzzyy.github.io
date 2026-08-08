@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>cloudzzy — identity &amp; status</title>
+<meta name="description" content="Official identity and Discord status record for cloudzzy.">
+<meta name="theme-color" content="#0a0b0f">
+
+<!-- One external font (JetBrains Mono), used only for data/ledger
+     fields — the Discord handle, dates, the changelog. Everything
+     else uses the system font stack, which resolves to San
+     Francisco on Apple devices. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ==================================================================
+   TOKENS
+   Every color, blur amount, radius and spacing value lives here.
+   ================================================================== */
+:root{
+  --bg-base:        #0a0b0f;
+
+  --glass:          rgba(255, 255, 255, 0.045);
+  --glass-strong:   rgba(255, 255, 255, 0.075);
+  --glass-border:   rgba(255, 255, 255, 0.09);
+  --glass-border-strong: rgba(255, 255, 255, 0.17);
+  --glass-highlight:rgba(255, 255, 255, 0.16);
+  --glass-blur:     28px;
+
+  --text:           #f5f5f7;
+  --text-secondary: rgba(245, 245, 247, 0.60);
+  --text-tertiary:  rgba(245, 245, 247, 0.36);
+
+  --accent:         #e8b256;
+  --accent-soft:    rgba(232, 178, 86, 0.16);
+  --online:         #67e8a4;
+
+  --radius-lg: 26px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --max-width: 620px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==================================================================
+   RESET & BASE
+   ================================================================== */
+*, *::before, *::after{ box-sizing: border-box; }
+html{ -webkit-text-size-adjust: 100%; }
+
+body{
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-base);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  position: relative;
+}
+
+a{ color: inherit; text-decoration: none; }
+h1, h2, h3, p{ margin: 0; }
+
+::selection{ background: var(--accent-soft); color: var(--text); }
+
+:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ==================================================================
+   AMBIENT BACKGROUND
+   Soft, slowly drifting light sources behind the glass — this is
+   what makes the blur actually read as translucent instead of a
+   flat dark card with a filter slapped on it.
+   ================================================================== */
+.ambient{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+
+.ambient span{
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.ambient .a1{
+  width: 640px; height: 640px;
+  top: -220px; left: -160px;
+  background: radial-gradient(circle, rgba(232,178,86,0.22), transparent 70%);
+  animation: drift1 34s var(--ease) infinite alternate;
+}
+
+.ambient .a2{
+  width: 560px; height: 560px;
+  top: 10%; right: -220px;
+  background: radial-gradient(circle, rgba(93,120,255,0.16), transparent 70%);
+  animation: drift2 40s var(--ease) infinite alternate;
+}
+
+.ambient .a3{
+  width: 720px; height: 720px;
+  bottom: -320px; left: 15%;
+  background: radial-gradient(circle, rgba(103,232,164,0.10), transparent 70%);
+  animation: drift3 46s var(--ease) infinite alternate;
+}
+
+.ambient::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 120% 60% at 50% 0%, transparent 0%, var(--bg-base) 85%);
+}
+
+@keyframes drift1{
+  from{ transform: translate(0, 0); }
+  to{   transform: translate(40px, 60px); }
+}
+@keyframes drift2{
+  from{ transform: translate(0, 0); }
+  to{   transform: translate(-50px, 40px); }
+}
+@keyframes drift3{
+  from{ transform: translate(0, 0); }
+  to{   transform: translate(30px, -30px); }
+}
+
+/* ==================================================================
+   GLASS — base surface used by every translucent panel
+   ================================================================== */
+.glass{
+  position: relative;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  box-shadow:
+    0 20px 50px -20px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+/* a hairline top highlight that reads as a light catching a glass edge */
+.glass::before{
+  content: "";
+  position: absolute;
+  top: 0; left: 6%; right: 6%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  pointer-events: none;
+}
+
+/* ==================================================================
+   LAYOUT
+   ================================================================== */
+.page{
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: clamp(32px, 9vw, 64px) 20px 48px;
+}
+
+section{ margin-top: clamp(30px, 5.5vw, 46px); }
+
+.eyebrow{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 14px;
+  padding-left: 2px;
+}
+
+.eyebrow::before{
+  content: "";
+  width: 12px;
+  height: 1px;
+  background: var(--glass-border-strong);
+}
+
+/* ==================================================================
+   HEADER
+   Pure typography, floating over the ambient background — no card,
+   so it reads as the top of the page rather than another panel.
+   ================================================================== */
+.header{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.name{
+  font-size: clamp(32px, 8vw, 42px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.record-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  border: 1px solid var(--glass-border-strong);
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 6px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.record-chip svg{ width: 11px; height: 11px; flex-shrink: 0; }
+
+.kicker{
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+}
+
+.tagline{
+  font-size: 15px;
+  color: var(--text-tertiary);
+  max-width: 48ch;
+}
+
+/* ==================================================================
+   CURRENT STATUS — the largest, most prominent glass surface
+   Edit: STATUS TEXT, DISCORD USERNAME, LAST VERIFIED DATE
+   ================================================================== */
+.status-panel{
+  padding: clamp(24px, 5vw, 32px);
+}
+
+.status-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.status-live{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-dot{
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--online);
+  box-shadow: 0 0 10px rgba(103, 232, 164, 0.7);
+  flex-shrink: 0;
+}
+
+.status-dot::after{
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1px solid var(--online);
+  opacity: 0.5;
+  animation: pulse 2.6s ease-out infinite;
+}
+
+@keyframes pulse{
+  0%   { transform: scale(0.55); opacity: 0.55; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.status-value{
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.status-divider{
+  height: 1px;
+  margin: 22px 0;
+  background: linear-gradient(90deg, transparent, var(--glass-border-strong), transparent);
+}
+
+.status-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.status-field dt{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 7px;
+}
+
+.status-field dd{
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 15.5px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.copy-btn{
+  border: 1px solid var(--glass-border-strong);
+  background: var(--glass);
+  color: var(--text-tertiary);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  padding: 4px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease);
+  min-height: 26px;
+}
+
+.copy-btn:hover, .copy-btn:focus-visible{
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.verified-line{
+  margin-top: 20px;
+  font-size: 12.5px;
+  color: var(--text-tertiary);
+}
+
+/* ==================================================================
+   OFFICIAL ACCOUNTS
+   One glass surface containing rows, divided by hairlines rather
+   than nested cards.
+   ================================================================== */
+.link-list{
+  padding: 6px;
+  overflow: hidden;
+}
+
+.link-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px 16px;
+  border-radius: var(--radius-md);
+  transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.link-row + .link-row{
+  margin-top: 2px;
+}
+
+a.link-row:hover, a.link-row:focus-visible{
+  background: var(--glass-strong);
+}
+
+.link-left{
+  display: flex;
+  align-items: baseline;
+  gap: 13px;
+  min-width: 0;
+}
+
+.link-name{
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.link-value{
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link-arrow{
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+a.link-row:hover .link-arrow{
+  transform: translate(2px, -2px);
+  color: var(--accent);
+}
+
+/* ==================================================================
+   VERIFICATION
+   A quieter surface — typography and a left rule rather than a
+   full glass card, so it doesn't compete with Current Status.
+   ================================================================== */
+.verify-block{
+  border-left: 1px solid var(--glass-border-strong);
+  padding-left: 20px;
+}
+
+.verify-block p{
+  color: var(--text-secondary);
+  font-size: 15px;
+  max-width: 52ch;
+}
+
+.verify-block p + p{ margin-top: 12px; }
+
+.verify-block strong{
+  color: var(--text);
+  font-weight: 650;
+}
+
+/* ==================================================================
+   CHANGE LOG
+   Vertical timeline with small glass nodes.
+   ================================================================== */
+.log{
+  position: relative;
+  padding-left: 22px;
+}
+
+.log::before{
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: linear-gradient(180deg, var(--glass-border-strong), transparent);
+}
+
+.log-entry{
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.log-entry:last-child{ padding-bottom: 0; }
+
+.log-entry::before{
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bg-base);
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 0 3px rgba(232, 178, 86, 0.12);
+}
+
+.log-date{
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.log-text{
+  margin-top: 4px;
+  font-size: 14.5px;
+  color: var(--text-secondary);
+}
+
+/* ==================================================================
+   PREVIOUS ACCOUNTS
+   ================================================================== */
+.empty-state{
+  border: 1px dashed var(--glass-border-strong);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+
+.prev-list{ display: grid; gap: 10px; }
+
+.prev-row{
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  color: var(--text-secondary);
+  background: var(--glass);
+}
+
+.prev-row .reason{ color: var(--text-tertiary); }
+
+/* ==================================================================
+   FOOTER
+   ================================================================== */
+footer{
+  margin-top: clamp(44px, 8vw, 60px);
+  padding-top: 20px;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+}
+
+/* ==================================================================
+   ENTRANCE — subtle, staggered, respects reduced motion
+   ================================================================== */
+.header, .status-panel, .link-list, .verify-block, .log, .prev-content, footer{
+  animation: rise 0.6s var(--ease) both;
+}
+.header{ animation-delay: 0s; }
+.status-panel{ animation-delay: 0.06s; }
+.link-list{ animation-delay: 0.12s; }
+.verify-block{ animation-delay: 0.18s; }
+.log{ animation-delay: 0.24s; }
+.prev-content{ animation-delay: 0.24s; }
+footer{ animation-delay: 0.3s; }
+
+@keyframes rise{
+  from{ opacity: 0; transform: translateY(10px); }
+  to{   opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+  .ambient span{ display: none; }
+}
+
+/* ==================================================================
+   RESPONSIVE — designed for mobile, not shrunk from desktop
+   ================================================================== */
+@media (max-width: 480px){
+  .status-grid{ grid-template-columns: 1fr; gap: 16px; }
+  .link-name{ width: 64px; font-size: 12.5px; }
+  .header-top{ flex-direction: column; align-items: flex-start; gap: 10px; }
+  .glass{ border-radius: var(--radius-md); }
+  :root{ --glass-blur: 20px; }
+  .ambient span{ filter: blur(60px); }
+}
+
+@media (min-width: 481px) and (max-width: 900px){
+  :root{ --max-width: 680px; }
+}
+</style>
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+  <span class="a1"></span>
+  <span class="a2"></span>
+  <span class="a3"></span>
+</div>
+
+<div class="page">
+
+  <!-- ============================================================
+       1. HEADER / IDENTITY
+       ============================================================ -->
+  <header class="header">
+    <div class="header-top">
+      <h1 class="name">cloudzzy</h1>
+      <span class="record-chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        official record
+      </span>
+    </div>
+    <p class="kicker">Identity &amp; Status</p>
+    <p class="tagline">account status for my discord. check back regularly if you want. still working on this so dont call it atrocious.</p>
+  </header>
+
+  <!-- ============================================================
+       2. CURRENT STATUS
+       Edit: STATUS TEXT, DISCORD USERNAME, LAST VERIFIED DATE
+       ============================================================ -->
+  <section aria-labelledby="status-heading">
+    <div class="eyebrow" id="status-heading">Current status</div>
+
+    <div class="glass status-panel">
+      <div class="status-top">
+        <div class="status-live">
+          <span class="status-dot" aria-hidden="true"></span>
+          <!-- STATUS TEXT -->
+          <span class="status-value">Regularly online</span>
+        </div>
+      </div>
+
+      <div class="status-divider"></div>
+
+      <dl class="status-grid">
+        <div class="status-field">
+          <dt>Discord</dt>
+          <!-- DISCORD USERNAME -->
+          <dd>
+            tuff.kid
+            <button class="copy-btn" type="button" data-copy="tuff.kid">copy</button>
+          </dd>
+        </div>
+        <div class="status-field">
+          <dt>Last verified</dt>
+          <!-- LAST VERIFIED DATE — keep datetime in sync with the
+               visible date; the script below reads it. -->
+          <dd><time datetime="2026-08-08" id="last-updated-time">8 August 2026</time></dd>
+        </div>
+      </dl>
+
+      <p class="verified-line" id="relative-verified"></p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. OFFICIAL ACCOUNTS / LINKS
+       Edit: add or remove .link-row entries. The Discord row has
+       no href — Discord profiles have no public URL.
+       ============================================================ -->
+  <section aria-labelledby="accounts-heading">
+    <div class="eyebrow" id="accounts-heading">Official accounts</div>
+
+    <div class="glass link-list">
+      <div class="link-row">
+        <div class="link-left">
+          <span class="link-name">Discord</span>
+          <span class="link-value">tuff.kid</span>
+        </div>
+        <button class="copy-btn" type="button" data-copy="tuff.kid">copy</button>
+      </div>
+
+      <a class="link-row" href="https://github.com/cloudzzyy" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-name">GitHub</span>
+          <span class="link-value">github.com/cloudzzyy</span>
+        </div>
+        <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+
+      <a class="link-row" href="https://cloudzzyy.github.io/" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-name">Website</span>
+          <span class="link-value">cloudzzyy.github.io</span>
+        </div>
+        <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+
+      <a class="link-row" href="https://guns.lol/cloudzzy" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-name">guns.lol</span>
+          <span class="link-value">guns.lol/cloudzzy</span>
+        </div>
+        <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. IDENTITY / VERIFICATION
+       ============================================================ -->
+  <section aria-labelledby="verify-heading">
+    <div class="eyebrow" id="verify-heading">Verification</div>
+
+    <div class="verify-block">
+      <p>If my Discord account is ever banned, deleted, hacked, renamed, or replaced, my new account (and active) will always be announced here first.</p>
+      <p>If an account, message, or announcement conflicts with the information on here, assume that <strong>this page is correct</strong>, not the account.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. CHANGE LOG
+       Edit: add a new .log-entry to the TOP of this list for
+       every update. Newest first.
+       ============================================================ -->
+  <section aria-labelledby="log-heading">
+    <div class="eyebrow" id="log-heading">Change log</div>
+
+    <div class="log">
+
+      <!-- New entries go above this line -->
+
+      <div class="log-entry">
+        <div class="log-date">8 August 2026</div>
+        <div class="log-text">Identity/status page established.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. PREVIOUS ACCOUNTS
+       Edit: replace .empty-state with a .prev-list of .prev-row
+       items once there's history to record, e.g.:
+       <div class="prev-list">
+         <div class="prev-row"><span>old.name</span><span class="reason">renamed — Jan 2026</span></div>
+       </div>
+       ============================================================ -->
+  <section aria-labelledby="prev-heading">
+    <div class="eyebrow" id="prev-heading">Previous accounts</div>
+
+    <div class="prev-content">
+      <div class="empty-state">none on record</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       7. FOOTER
+       ============================================================ -->
+  <footer>
+    <span>cloudzzy</span>
+    <span>last updated <span id="footer-date">8 August 2026</span></span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // -- Relative "verified" line, computed from the <time> element's
+  //    datetime attribute so it only needs to be updated in one place.
+  var timeEl = document.getElementById("last-updated-time");
+  var relativeEl = document.getElementById("relative-verified");
+  if (timeEl && relativeEl) {
+    var updated = new Date(timeEl.getAttribute("datetime") + "T00:00:00");
+    var days = Math.floor((Date.now() - updated.getTime()) / 86400000);
+    var phrase;
+    if (days <= 0) phrase = "Verified today.";
+    else if (days === 1) phrase = "Verified 1 day ago.";
+    else if (days < 30) phrase = "Verified " + days + " days ago.";
+    else phrase = "Verified over a month ago.";
+    relativeEl.textContent = phrase;
+  }
+
+  // -- Copy-to-clipboard for the Discord username.
+  document.querySelectorAll("[data-copy]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var value = btn.getAttribute("data-copy");
+      var reset = btn.textContent;
+      var done = function(){
+        btn.textContent = "copied";
+        setTimeout(function(){ btn.textContent = reset; }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done).catch(function(){});
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = value;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); done(); } catch(e){}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
