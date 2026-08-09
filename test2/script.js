@@ -17,8 +17,8 @@
     identity: {
       name: "cloudzzy",
       discord: "tuff.kid",
-      status: "Regularly online",
-      lastVerified: "2026-08-08" // format: "YYYY-MM-DD"
+      status: "Testing system",
+      lastVerified: "2026-08-09" // format: "YYYY-MM-DD"
     },
 
     // Your other official links. Discord itself isn't listed here —
