@@ -17,7 +17,7 @@
     identity: {
       name: "cloudzzy",
       discord: "tuff.kid",
-      status: "Testing system",
+      status: "Regularly online",
       lastVerified: "2026-08-09" // format: "YYYY-MM-DD"
     },
 
