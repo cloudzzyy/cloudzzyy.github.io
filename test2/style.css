@@ -1,0 +1,630 @@
+/* ====================================================================
+   TOKENS
+   ==================================================================== */
+:root{
+  --bg-base:        #0a0b0f;
+
+  --glass:          rgba(255, 255, 255, 0.045);
+  --glass-strong:   rgba(255, 255, 255, 0.075);
+  --glass-border:   rgba(255, 255, 255, 0.09);
+  --glass-border-strong: rgba(255, 255, 255, 0.17);
+  --glass-highlight:rgba(255, 255, 255, 0.16);
+  --glass-blur:     30px;
+
+  --text:           #f5f5f7;
+  --text-secondary: rgba(245, 245, 247, 0.60);
+  --text-tertiary:  rgba(245, 245, 247, 0.36);
+
+  --accent:         #e8b256;
+  --accent-soft:    rgba(232, 178, 86, 0.14);
+  --online:         #67e8a4;
+
+  --radius-shell: 32px;
+  --radius-md: 16px;
+  --radius-pill: 999px;
+
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --max-width: 560px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --nav-h: 64px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ====================================================================
+   RESET & BASE
+   ==================================================================== */
+*, *::before, *::after{ box-sizing: border-box; }
+html{ -webkit-text-size-adjust: 100%; }
+
+body{
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-base);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  position: relative;
+}
+
+a{ color: inherit; text-decoration: none; }
+h1, h2, h3, p{ margin: 0; }
+button{ font: inherit; }
+
+::selection{ background: var(--accent-soft); color: var(--text); }
+
+:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* ====================================================================
+   AMBIENT BACKGROUND
+   ==================================================================== */
+.ambient{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+
+.ambient span{
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.ambient .a1{
+  width: 620px; height: 620px;
+  top: -220px; left: -180px;
+  background: radial-gradient(circle, rgba(232,178,86,0.19), transparent 70%);
+  animation: drift1 34s var(--ease) infinite alternate;
+}
+.ambient .a2{
+  width: 540px; height: 540px;
+  top: 8%; right: -230px;
+  background: radial-gradient(circle, rgba(93,120,255,0.14), transparent 70%);
+  animation: drift2 40s var(--ease) infinite alternate;
+}
+.ambient .a3{
+  width: 680px; height: 680px;
+  bottom: -320px; left: 12%;
+  background: radial-gradient(circle, rgba(103,232,164,0.09), transparent 70%);
+  animation: drift3 46s var(--ease) infinite alternate;
+}
+.ambient::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 120% 60% at 50% 0%, transparent 0%, var(--bg-base) 85%);
+}
+
+@keyframes drift1{ from{ transform: translate(0,0); } to{ transform: translate(40px, 60px); } }
+@keyframes drift2{ from{ transform: translate(0,0); } to{ transform: translate(-50px, 40px); } }
+@keyframes drift3{ from{ transform: translate(0,0); } to{ transform: translate(30px, -30px); } }
+
+/* ====================================================================
+   PAGE / SHELL
+   One continuous glass surface. The active view is shown inside it;
+   the other views are hidden rather than stacked as separate cards.
+   ==================================================================== */
+.page{
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: clamp(28px, 8vw, 56px) 18px calc(var(--nav-h) + var(--safe-bottom) + 40px);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.glass{
+  position: relative;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-shell);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  box-shadow:
+    0 30px 70px -30px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.glass::before{
+  content: "";
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  pointer-events: none;
+}
+
+.shell{
+  width: 100%;
+  padding: clamp(28px, 7vw, 40px) clamp(24px, 6vw, 36px);
+}
+
+/* ====================================================================
+   VIEWS — one shown at a time, subtle crossfade between them
+   ==================================================================== */
+.view{
+  display: none;
+}
+
+.view.active{
+  display: block;
+  animation: view-in 0.4s var(--ease) both;
+}
+
+@keyframes view-in{
+  from{ opacity: 0; transform: translateY(8px); }
+  to{   opacity: 1; transform: translateY(0); }
+}
+
+.area-heading{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.area-heading.small{ margin-bottom: 14px; }
+
+.area-heading .bar{
+  width: 3px;
+  height: 15px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--accent), transparent);
+  flex-shrink: 0;
+}
+
+.area-heading h2{
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ---- Status view ---- */
+.identity{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand-name{
+  font-size: clamp(24px, 6vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.record-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--accent);
+  border: 1px solid var(--glass-border-strong);
+  background: var(--accent-soft);
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.record-chip svg{ width: 10px; height: 10px; flex-shrink: 0; }
+
+.tagline{
+  font-size: 14px;
+  color: var(--text-tertiary);
+  max-width: 50ch;
+  margin-top: 10px;
+}
+
+.divider{
+  height: 1px;
+  margin: 24px 0 22px;
+  background: linear-gradient(90deg, transparent, var(--glass-border-strong), transparent);
+}
+
+.sub-divider{
+  height: 1px;
+  margin: 24px 0;
+  background: var(--glass-border);
+}
+
+.discord-name{
+  font-family: var(--mono);
+  font-size: clamp(28px, 8vw, 34px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.copy-btn{
+  border: 1px solid var(--glass-border-strong);
+  background: var(--glass);
+  color: var(--text-tertiary);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease);
+  min-height: 26px;
+}
+
+.copy-btn:hover, .copy-btn:focus-visible{
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.status-live{
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.status-dot{
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--online);
+  box-shadow: 0 0 10px rgba(103, 232, 164, 0.7);
+  flex-shrink: 0;
+}
+
+.status-dot::after{
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid var(--online);
+  opacity: 0.5;
+  animation: pulse 2.6s ease-out infinite;
+}
+
+@keyframes pulse{
+  0%   { transform: scale(0.55); opacity: 0.55; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.status-live .label{ font-size: 14.5px; font-weight: 550; color: var(--text-secondary); }
+.status-live .sep{ color: var(--text-tertiary); font-size: 12px; }
+.status-live .verified{ font-family: var(--mono); font-size: 12px; color: var(--text-tertiary); }
+
+/* ---- Verify badge + share row (Status view) ---- */
+.verify-badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  padding: 6px 12px 6px 10px;
+  border: 1px solid var(--glass-border-strong);
+  background: var(--glass);
+  border-radius: var(--radius-pill);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.verify-badge svg{ width: 12px; height: 12px; color: var(--accent); flex-shrink: 0; }
+
+.verify-badge .vb-label{
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.verify-badge .sep{ color: var(--glass-border-strong); }
+
+.share-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.share-label{ font-size: 13px; color: var(--text-tertiary); }
+
+/* ---- Verify view current-account line ---- */
+.verify-current{
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--text-tertiary);
+}
+
+.verify-current strong{ color: var(--text-secondary); font-weight: 600; }
+
+/* ---- Accounts view ---- */
+.link-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 10px;
+  margin: 0 -10px;
+  border-radius: var(--radius-md);
+  transition: background 0.25s var(--ease);
+}
+
+a.link-row:hover, a.link-row:focus-visible{ background: var(--glass-strong); }
+
+.link-left{ display: flex; align-items: baseline; gap: 13px; min-width: 0; }
+
+.link-name{
+  font-size: 13px;
+  color: var(--text-secondary);
+  width: 70px;
+  flex-shrink: 0;
+}
+
+.link-value{
+  font-family: var(--mono);
+  font-size: 13.5px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link-arrow{
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+a.link-row:hover .link-arrow{ transform: translate(2px, -2px); color: var(--accent); }
+
+/* ---- Verify view ---- */
+.verify-text p{ color: var(--text-secondary); font-size: 14.5px; max-width: 52ch; }
+.verify-text p + p{ margin-top: 12px; }
+.verify-text strong{ color: var(--text); font-weight: 650; }
+
+/* ---- History view ---- */
+.log{ position: relative; padding-left: 20px; }
+
+.log::before{
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: linear-gradient(180deg, var(--glass-border-strong), transparent);
+}
+
+.log-entry{ position: relative; padding-bottom: 18px; }
+.log-entry:last-child{ padding-bottom: 0; }
+
+.log-entry::before{
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg-base);
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 0 3px rgba(232, 178, 86, 0.1);
+}
+
+.log-date{ font-family: var(--mono); font-size: 11.5px; color: var(--accent); }
+.log-text{ margin-top: 4px; font-size: 14px; color: var(--text-secondary); }
+
+.prev-empty{ font-family: var(--mono); font-size: 12.5px; color: var(--text-tertiary); }
+.prev-list{ display: grid; gap: 8px; }
+
+.prev-row{
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.prev-row .reason{ color: var(--text-tertiary); }
+
+/* ====================================================================
+   NAVIGATION
+   Adapted from the supplied TaleMods navbar technique: translucent
+   capsule, inset highlights, a pill that slides between items, and
+   a label that expands only for the active item.
+   ==================================================================== */
+.navbar{
+  --c-glass: #bbbbbc;
+  --c-light: #fff;
+  --c-dark: #000;
+  --glass-reflex-light: 0.3;
+  --saturation: 150%;
+
+  position: fixed;
+  z-index: 1000;
+  bottom: calc(14px + var(--safe-bottom));
+  left: 50%;
+  translate: -50%;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: var(--nav-h);
+  max-width: calc(100vw - 24px);
+  padding: 0 6px;
+  border: none;
+  border-radius: 99em;
+  background-color: rgba(187, 187, 188, 0.10);
+  background-color: color-mix(in srgb, var(--c-glass) 10%, transparent);
+  backdrop-filter: blur(20px) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(20px) saturate(var(--saturation));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 10%), transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 70%), transparent),
+    inset -2px -2px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 60%), transparent),
+    inset -3px -8px 1px -6px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 40%), transparent),
+    inset -0.3px -1px 4px 0px color-mix(in srgb, var(--c-dark) 10%, transparent),
+    0 20px 40px -16px rgba(0, 0, 0, 0.55);
+}
+
+.nav-item{
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  color: #b7b9bd;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0 13px;
+  border: none;
+  border-radius: 99em;
+  cursor: pointer;
+  background-color: transparent;
+  transition:
+    color 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+    background-color 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.nav-item:active{ opacity: 0.7; }
+
+.nav-item.active{ color: #ffffff; }
+
+.nav-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-icon svg{ width: 19px; height: 19px; }
+
+.nav-label{
+  max-width: 0;
+  overflow: hidden;
+  min-width: 0;
+  margin-left: 0;
+  line-height: 1;
+  pointer-events: none;
+  transition: max-width 0.45s cubic-bezier(0.25, 1, 0.5, 1), margin-left 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.nav-label > span{
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.nav-item.active .nav-label{
+  max-width: 120px;
+  margin-left: 8px;
+}
+
+.nav-pill{
+  position: absolute;
+  z-index: 0;
+  top: 8px;
+  bottom: 8px;
+  left: 0;
+  width: 0;
+  border-radius: 99em;
+  background-color: rgba(255, 255, 255, 0.14);
+  opacity: 0;
+  transform: translateX(0);
+  transition:
+    transform 0.4s cubic-bezier(0.3, 1, 0.5, 1),
+    width 0.4s cubic-bezier(0.3, 1, 0.5, 1),
+    opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.nav-travel{
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 13px;
+  transform: translateX(0);
+  opacity: 0;
+  transition:
+    transform 0.4s cubic-bezier(0.3, 1, 0.5, 1),
+    opacity 0.18s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.nav-item:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Used briefly and synchronously by script.js to measure a nav item's
+   true expanded width without its label transition being mid-flight.
+   Never visible — added and removed within a single JS tick. */
+.navbar.no-anim,
+.navbar.no-anim *{
+  transition: none !important;
+}
+
+/* ====================================================================
+   REDUCED MOTION
+   ==================================================================== */
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+  .ambient span{ display: none; }
+}
+
+/* ====================================================================
+   RESPONSIVE
+   ==================================================================== */
+@media (max-width: 480px){
+  :root{ --glass-blur: 22px; --radius-shell: 26px; --nav-h: 60px; }
+  .ambient span{ filter: blur(60px); }
+  .link-name{ width: 62px; font-size: 12px; }
+  .nav-item{ padding: 0 11px; height: 44px; }
+  .nav-icon svg{ width: 18px; height: 18px; }
+  .nav-item.active .nav-label{ max-width: 96px; }
+}
+
+@media (min-width: 481px) and (max-width: 900px){
+  :root{ --max-width: 620px; }
+}
