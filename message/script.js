@@ -419,6 +419,13 @@
       form.setAttribute("action", siteData.contact.endpoint);
     }
 
+    // Force the correct initial visual state directly, rather than relying
+    // on the "hidden" attribute plus a CSS rule to hide the success panel —
+    // an inline style here cannot be overridden by any class-based CSS
+    // rule, so this is true regardless of what CSS actually ends up loaded.
+    form.style.display = "";
+    if (successEl) successEl.style.display = "none";
+
     var isSubmitting = false;
     var lastFocused = null;
 
@@ -435,8 +442,8 @@
     function resetForm() {
       form.reset();
       setStatus("", null);
-      form.hidden = false;
-      if (successEl) successEl.hidden = true;
+      form.style.display = "";
+      if (successEl) successEl.style.display = "none";
     }
 
     function focusableElements() {
@@ -468,7 +475,7 @@
     }
 
     function openModal() {
-      if (form.hidden) resetForm(); // reopen fresh after a previous success
+      if (form.style.display === "none") resetForm(); // reopen fresh after a previous success
       lastFocused = document.activeElement;
       backdrop.classList.add("open");
       document.body.style.overflow = "hidden";
@@ -524,8 +531,8 @@
       })
         .then(function (response) {
           if (response.ok) {
-            form.hidden = true;
-            if (successEl) successEl.hidden = false;
+            form.style.display = "none";
+            if (successEl) successEl.style.display = "flex";
             if (againBtn) againBtn.focus();
           } else {
             setStatus("Something went wrong — please try again.", "error");
