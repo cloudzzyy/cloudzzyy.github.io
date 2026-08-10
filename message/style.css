@@ -546,6 +546,8 @@ button{ font: inherit; }
   gap: 10px;
 }
 
+.modal-success[hidden]{ display: none; }
+
 .modal-success svg{ width: 30px; height: 30px; color: var(--online); }
 
 .modal-success p{ font-size: 15px; font-weight: 600; color: var(--text); }
