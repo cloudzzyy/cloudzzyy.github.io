@@ -1,4 +1,3 @@
-```css
 * {
   box-sizing: border-box;
 }
@@ -19,8 +18,14 @@ body {
   margin: 0;
   color: var(--text);
   background: var(--bg);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-    "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -38,9 +43,11 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transform: translateY(-2vh);
-  animation: enter 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* ==============================================================
+   TEXT
+   ============================================================== */
 
 .eyebrow {
   margin: 0 0 9px;
@@ -48,6 +55,11 @@ body {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
+
+  animation:
+    titleDrop 650ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    both;
 }
 
 h1 {
@@ -56,26 +68,41 @@ h1 {
   line-height: 0.98;
   font-weight: 600;
   letter-spacing: -0.055em;
+
+  animation:
+    titleDrop 650ms 80ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    both;
 }
 
-/* Liquid-glass style primary action */
+/* ==============================================================
+   VIEW STATUS — GLASS BUTTON
+   ============================================================== */
+
 .status-button {
   position: relative;
   isolation: isolate;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+
   min-height: 54px;
   margin-top: 34px;
   padding: 0 21px 0 22px;
+
   overflow: hidden;
+
   border: 0;
   border-radius: 999px;
+
   color: #fff;
   background: rgba(190, 190, 194, 0.105);
+
   backdrop-filter: blur(14px) saturate(150%);
   -webkit-backdrop-filter: blur(14px) saturate(150%);
+
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.075),
     inset 1.5px 2.5px 0 -1.5px rgba(255, 255, 255, 0.28),
@@ -83,10 +110,20 @@ h1 {
     inset -3px -8px 1px -6px rgba(255, 255, 255, 0.11),
     inset -0.3px -1px 4px rgba(0, 0, 0, 0.16),
     0 14px 34px rgba(0, 0, 0, 0.24);
+
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.01em;
+
+  /* Entrance animation */
+  opacity: 0;
+  translate: 0 45px;
+  animation:
+    buttonRise 700ms 220ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+
   transition:
     transform 400ms cubic-bezier(0.25, 1, 0.5, 1),
     background-color 400ms cubic-bezier(0.25, 1, 0.5, 1),
@@ -95,10 +132,13 @@ h1 {
 
 .status-button::before {
   content: "";
+
   position: absolute;
   z-index: -1;
   inset: 1px;
+
   border-radius: inherit;
+
   background:
     linear-gradient(
       135deg,
@@ -107,17 +147,22 @@ h1 {
       rgba(255, 255, 255, 0.025) 72%,
       transparent
     );
+
   opacity: 0.9;
 }
 
 .status-button::after {
   content: "";
+
   position: absolute;
   top: 0;
   left: 16%;
+
   width: 68%;
   height: 1px;
+
   border-radius: 99px;
+
   background: rgba(255, 255, 255, 0.32);
   opacity: 0.75;
 }
@@ -125,18 +170,24 @@ h1 {
 .status-button svg {
   width: 15px;
   height: 15px;
+
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+
   opacity: 0.72;
-  transition: transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
+
+  transition:
+    transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .status-button:hover {
   transform: translateY(-2px);
+
   background: rgba(190, 190, 194, 0.14);
+
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.10),
     inset 1.5px 2.5px 0 -1.5px rgba(255, 255, 255, 0.34),
@@ -154,19 +205,35 @@ h1 {
   transform: scale(0.98);
 }
 
+/* ==============================================================
+   SUBTLE LINKS
+   These appear after the button has finished landing.
+   ============================================================== */
+
 .links {
   display: flex;
   align-items: center;
   gap: 10px;
+
   margin-top: 19px;
+
   color: rgba(255, 255, 255, 0.25);
   font-size: 12px;
   font-weight: 500;
+
+  opacity: 0;
+  transform: translateY(5px);
+
+  animation:
+    linksFade 500ms 820ms
+    ease
+    forwards;
 }
 
 .links a {
   color: rgba(255, 255, 255, 0.40);
   text-decoration: none;
+
   transition: color 180ms ease;
 }
 
@@ -174,22 +241,59 @@ h1 {
   color: rgba(255, 255, 255, 0.78);
 }
 
+/* ==============================================================
+   FOCUS
+   ============================================================== */
+
 .status-button:focus-visible,
 .links a:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.60);
   outline-offset: 4px;
 }
 
-@keyframes enter {
+/* ==============================================================
+   ENTRANCE ANIMATIONS
+   ============================================================== */
+
+@keyframes titleDrop {
   from {
     opacity: 0;
-    transform: translateY(calc(-2vh + 10px));
+    transform: translateY(-28px);
   }
+
   to {
     opacity: 1;
-    transform: translateY(-2vh);
+    transform: translateY(0);
   }
 }
+
+@keyframes buttonRise {
+  from {
+    opacity: 0;
+    translate: 0 45px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes linksFade {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==============================================================
+   MOBILE
+   ============================================================== */
 
 @media (max-width: 520px) {
   .home {
@@ -205,9 +309,19 @@ h1 {
   }
 }
 
+/* ==============================================================
+   ACCESSIBILITY
+   ============================================================== */
+
 @media (prefers-reduced-motion: reduce) {
-  .hero {
+  .eyebrow,
+  h1,
+  .status-button,
+  .links {
     animation: none;
+    opacity: 1;
+    translate: 0 0;
+    transform: none;
   }
 
   .status-button,
@@ -216,4 +330,3 @@ h1 {
     transition: none;
   }
 }
-```
