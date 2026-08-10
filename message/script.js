@@ -18,7 +18,7 @@
       name: "cloudzzy",
       discord: "tuff.kid",
       status: "Regularly online",
-      lastVerified: "2026-08-08" // format: "YYYY-MM-DD"
+      lastVerified: "2026-08-10" // format: "YYYY-MM-DD"
     },
 
     // Your other official links. Discord itself isn't listed here —
@@ -41,7 +41,8 @@
     // this list — you don't need to put it first, newest is shown
     // automatically based on the date.
     changelog: [
-      { date: "2026-08-08", title: "Identity/status page established." }
+      { date: "2026-08-10", title: "Added a fallback form where you can contact me." },
+      { date: "2026-08-08", title: "Status page established." }
     ],
 
     // The public URL that the "copy link" button on the Status view
