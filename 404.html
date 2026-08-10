@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0b0d">
+  <meta name="description" content="This page doesn't exist.">
+  <title>404 · cloudzzy</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0b0d;
+      --text: #f5f5f5;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+
+      display: grid;
+      place-items: center;
+
+      padding: 32px 22px;
+
+      color: var(--text);
+      background: var(--bg);
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "SF Pro Text",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .error {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* ==========================================================
+       404 + MESSAGE
+       Both enter from above.
+       ========================================================== */
+
+    .code {
+      margin: 0 0 12px;
+
+      color: rgba(255, 255, 255, 0.32);
+
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+
+      opacity: 0;
+
+      animation:
+        titleDrop 650ms
+        cubic-bezier(0.22, 1, 0.36, 1)
+        forwards;
+    }
+
+    h1 {
+      margin: 0;
+
+      max-width: 700px;
+
+      color: #f5f5f5;
+
+      font-size: clamp(42px, 8vw, 72px);
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: -0.055em;
+
+      opacity: 0;
+
+      animation:
+        titleDrop 650ms 80ms
+        cubic-bezier(0.22, 1, 0.36, 1)
+        forwards;
+    }
+
+    /* ==========================================================
+       GO HOME
+       Comes upward from below.
+       ========================================================== */
+
+    .home-button {
+      position: relative;
+      isolation: isolate;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 50px;
+
+      margin-top: 32px;
+      padding: 0 20px;
+
+      overflow: hidden;
+
+      border: 0;
+      border-radius: 999px;
+
+      color: #fff;
+      background: rgba(190, 190, 194, 0.105);
+
+      backdrop-filter: blur(14px) saturate(150%);
+      -webkit-backdrop-filter: blur(14px) saturate(150%);
+
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.075),
+        inset 1.5px 2.5px 0 -1.5px rgba(255, 255, 255, 0.28),
+        inset -2px -2px 0 -2px rgba(255, 255, 255, 0.18),
+        inset -3px -8px 1px -6px rgba(255, 255, 255, 0.11),
+        inset -0.3px -1px 4px rgba(0, 0, 0, 0.16),
+        0 14px 34px rgba(0, 0, 0, 0.24);
+
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+
+      opacity: 0;
+
+      animation:
+        buttonRise 700ms 220ms
+        cubic-bezier(0.22, 1, 0.36, 1)
+        forwards;
+
+      transition:
+        transform 400ms cubic-bezier(0.25, 1, 0.5, 1),
+        background-color 400ms cubic-bezier(0.25, 1, 0.5, 1),
+        box-shadow 400ms cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .home-button::before {
+      content: "";
+
+      position: absolute;
+      z-index: -1;
+
+      inset: 1px;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.12),
+          transparent 38%,
+          rgba(255, 255, 255, 0.025) 72%,
+          transparent
+        );
+
+      opacity: 0.9;
+    }
+
+    .home-button::after {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+      left: 16%;
+
+      width: 68%;
+      height: 1px;
+
+      border-radius: 99px;
+
+      background: rgba(255, 255, 255, 0.32);
+
+      opacity: 0.75;
+    }
+
+    .home-button:hover {
+      transform: translateY(-2px);
+
+      background: rgba(190, 190, 194, 0.14);
+
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.10),
+        inset 1.5px 2.5px 0 -1.5px rgba(255, 255, 255, 0.34),
+        inset -2px -2px 0 -2px rgba(255, 255, 255, 0.21),
+        inset -3px -8px 1px -6px rgba(255, 255, 255, 0.13),
+        inset -0.3px -1px 4px rgba(0, 0, 0, 0.18),
+        0 18px 40px rgba(0, 0, 0, 0.30);
+    }
+
+    .home-button:active {
+      transform: scale(0.98);
+    }
+
+    /* ==========================================================
+       VIEW STATUS
+       Appears only after the button has landed.
+       ========================================================== */
+
+    .status-link {
+      display: block;
+
+      margin-top: 17px;
+
+      color: rgba(255, 255, 255, 0.38);
+
+      font-size: 12px;
+      font-weight: 500;
+
+      text-decoration: none;
+
+      opacity: 0;
+      transform: translateY(5px);
+
+      animation:
+        linksFade 500ms 920ms
+        ease
+        forwards;
+
+      transition: color 180ms ease;
+    }
+
+    .status-link:hover {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    /* ==========================================================
+       FOCUS
+       ========================================================== */
+
+    .home-button:focus-visible,
+    .status-link:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.60);
+      outline-offset: 4px;
+    }
+
+    /* ==========================================================
+       ANIMATIONS
+       ========================================================== */
+
+    @keyframes titleDrop {
+      from {
+        opacity: 0;
+        transform: translateY(-28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes buttonRise {
+      from {
+        opacity: 0;
+        transform: translateY(45px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes linksFade {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ==========================================================
+       ACCESSIBILITY
+       ========================================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+      .code,
+      h1,
+      .home-button,
+      .status-link {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+
+      .home-button,
+      .status-link {
+        transition: none;
+      }
+    }
+
+    /* ==========================================================
+       MOBILE
+       ========================================================== */
+
+    @media (max-width: 520px) {
+      body {
+        padding: 24px 18px;
+      }
+
+      h1 {
+        font-size: clamp(40px, 11vw, 60px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="error">
+
+    <p class="code">404</p>
+
+    <h1>this page doesn’t exist bae</h1>
+
+    <a class="home-button" href="/">
+      go home
+    </a>
+
+    <a class="status-link" href="/status/">
+      view status
+    </a>
+
+  </main>
+</body>
+</html>
