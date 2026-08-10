@@ -1,18 +1,16 @@
+```css
 * {
   box-sizing: border-box;
 }
 
 :root {
-  --background: #090a0c;
+  --bg: #0a0b0d;
   --text: #f5f5f5;
-  --muted: #85888b;
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-highlight: rgba(255, 255, 255, 0.16);
 }
 
 html {
   min-height: 100%;
-  background: var(--background);
+  background: var(--bg);
 }
 
 body {
@@ -20,26 +18,11 @@ body {
   min-height: 100svh;
   margin: 0;
   color: var(--text);
-  background:
-    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.035), transparent 34rem),
-    var(--background);
+  background: var(--bg);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
     "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(circle at center, black, transparent 72%);
-  -webkit-mask-image: radial-gradient(circle at center, black, transparent 72%);
 }
 
 .home {
@@ -75,42 +58,68 @@ h1 {
   letter-spacing: -0.055em;
 }
 
+/* Liquid-glass style primary action */
 .status-button {
   position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 52px;
+  min-height: 54px;
   margin-top: 34px;
   padding: 0 21px 0 22px;
-  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  border: 0;
   border-radius: 999px;
   color: #fff;
-  background: linear-gradient(180deg, rgba(255,255,255,0.105), rgba(255,255,255,0.055));
+  background: rgba(190, 190, 194, 0.105);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
   box-shadow:
-    inset 0 1px 0 var(--glass-highlight),
-    inset 0 -1px 0 rgba(0,0,0,0.12),
-    0 14px 34px rgba(0,0,0,0.35);
-  backdrop-filter: blur(18px) saturate(145%);
-  -webkit-backdrop-filter: blur(18px) saturate(145%);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.075),
+    inset 1.5px 2.5px 0 -1.5px rgba(255, 255, 255, 0.28),
+    inset -2px -2px 0 -2px rgba(255, 255, 255, 0.18),
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.11),
+    inset -0.3px -1px 4px rgba(0, 0, 0, 0.16),
+    0 14px 34px rgba(0, 0, 0, 0.24);
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.01em;
-  transition: transform 220ms cubic-bezier(0.25,1,0.5,1),
-    background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  transition:
+    transform 400ms cubic-bezier(0.25, 1, 0.5, 1),
+    background-color 400ms cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 400ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .status-button::before {
   content: "";
   position: absolute;
-  top: 1px;
-  left: 18%;
-  right: 18%;
+  z-index: -1;
+  inset: 1px;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12),
+      transparent 38%,
+      rgba(255, 255, 255, 0.025) 72%,
+      transparent
+    );
+  opacity: 0.9;
+}
+
+.status-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16%;
+  width: 68%;
   height: 1px;
   border-radius: 99px;
-  background: rgba(255,255,255,0.28);
+  background: rgba(255, 255, 255, 0.32);
+  opacity: 0.75;
 }
 
 .status-button svg {
@@ -121,15 +130,20 @@ h1 {
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0.8;
-  transition: transform 220ms cubic-bezier(0.25,1,0.5,1);
+  opacity: 0.72;
+  transition: transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .status-button:hover {
   transform: translateY(-2px);
-  border-color: rgba(255,255,255,0.19);
-  background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.075));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.21), 0 18px 40px rgba(0,0,0,0.42);
+  background: rgba(190, 190, 194, 0.14);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.10),
+    inset 1.5px 2.5px 0 -1.5px rgba(255, 255, 255, 0.34),
+    inset -2px -2px 0 -2px rgba(255, 255, 255, 0.21),
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.13),
+    inset -0.3px -1px 4px rgba(0, 0, 0, 0.18),
+    0 18px 40px rgba(0, 0, 0, 0.30);
 }
 
 .status-button:hover svg {
@@ -137,7 +151,7 @@ h1 {
 }
 
 .status-button:active {
-  transform: translateY(0) scale(0.98);
+  transform: scale(0.98);
 }
 
 .links {
@@ -145,39 +159,61 @@ h1 {
   align-items: center;
   gap: 10px;
   margin-top: 19px;
-  color: rgba(255,255,255,0.27);
+  color: rgba(255, 255, 255, 0.25);
   font-size: 12px;
   font-weight: 500;
 }
 
 .links a {
-  color: rgba(255,255,255,0.42);
+  color: rgba(255, 255, 255, 0.40);
   text-decoration: none;
   transition: color 180ms ease;
 }
 
 .links a:hover {
-  color: rgba(255,255,255,0.82);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .status-button:focus-visible,
 .links a:focus-visible {
-  outline: 2px solid rgba(255,255,255,0.65);
+  outline: 2px solid rgba(255, 255, 255, 0.60);
   outline-offset: 4px;
 }
 
 @keyframes enter {
-  from { opacity: 0; transform: translateY(calc(-2vh + 10px)); }
-  to { opacity: 1; transform: translateY(-2vh); }
+  from {
+    opacity: 0;
+    transform: translateY(calc(-2vh + 10px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-2vh);
+  }
 }
 
 @media (max-width: 520px) {
-  .home { padding: 24px 18px; }
-  h1 { font-size: clamp(50px, 18vw, 72px); }
-  .status-button { margin-top: 30px; }
+  .home {
+    padding: 24px 18px;
+  }
+
+  h1 {
+    font-size: clamp(50px, 18vw, 72px);
+  }
+
+  .status-button {
+    margin-top: 30px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero { animation: none; }
-  .status-button, .status-button svg, .links a { transition: none; }
+  .hero {
+    animation: none;
+  }
+
+  .status-button,
+  .status-button svg,
+  .links a {
+    transition: none;
+  }
 }
+```
