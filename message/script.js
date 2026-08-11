@@ -18,7 +18,7 @@
       name: "cloudzzy",
       discord: "tuff.kid",
       status: "Regularly online",
-      lastVerified: "2026-08-10" // format: "YYYY-MM-DD"
+      lastVerified: "2026-08-08" // format: "YYYY-MM-DD"
     },
 
     // Your other official links. Discord itself isn't listed here —
@@ -41,8 +41,7 @@
     // this list — you don't need to put it first, newest is shown
     // automatically based on the date.
     changelog: [
-      { date: "2026-08-10", title: "Added a fallback form where you can contact me." },
-      { date: "2026-08-08", title: "Status page established." }
+      { date: "2026-08-08", title: "Identity/status page established." }
     ],
 
     // The public URL that the "copy link" button on the Status view
@@ -579,4 +578,34 @@
       }
     });
   });
+})();
+
+
+// ======================================================================
+// PAGE VIEW TRACKING
+// Sends the current path to a Supabase Edge Function once per page
+// load. Deliberately kept outside the IIFE above and fully
+// self-contained — it shares no variables or state with any existing
+// logic, so it cannot interfere with navigation, rendering, or the
+// contact form. Every failure mode is swallowed silently: a blocked,
+// slow, or failing request never affects the rest of the site.
+//
+// No secret key is used or needed here — this Edge Function URL is
+// a public endpoint by design (that's how a static site calls it).
+// ======================================================================
+(function trackPageView() {
+  var TRACK_URL = "https://syiorcgftobjehyzypbt.supabase.co/functions/v1/track";
+
+  try {
+    fetch(TRACK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: window.location.pathname }),
+      keepalive: true // let the request finish even if the visitor navigates away immediately
+    }).catch(function () {
+      // Non-blocking by design: a failed/blocked request is simply ignored.
+    });
+  } catch (e) {
+    // Covers environments where fetch() itself throws synchronously.
+  }
 })();
