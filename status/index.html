@@ -2,155 +2,199 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>cloudzzy status &amp; status</title>
+<meta name="description" content="Official identity and Discord status record for cloudzzy.">
+<meta name="theme-color" content="#0a0b0f">
 
-<title>cloudzzy status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-<style>
-:root{
-    --bg:#0d1117;
-    --card:#161b22;
-    --border:#30363d;
-    --text:#e6edf3;
-    --muted:#8b949e;
-    --accent:#58a6ff;
-    --green:#3fb950;
-}
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    display:flex;
-    justify-content:center;
-    padding:40px 20px;
-}
-
-.container{
-    width:100%;
-    max-width:760px;
-}
-
-.card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:28px;
-    margin-bottom:20px;
-}
-
-h1{
-    font-size:2.2rem;
-    margin-bottom:6px;
-}
-
-.subtitle{
-    color:var(--muted);
-    margin-bottom:24px;
-}
-
-h2{
-    margin-bottom:10px;
-    margin-top:18px;
-}
-
-p{
-    line-height:1.7;
-    color:var(--text);
-}
-
-ul{
-    margin-left:20px;
-    line-height:1.8;
-}
-
-a{
-    color:var(--accent);
-    text-decoration:none;
-}
-
-a:hover{
-    text-decoration:underline;
-}
-
-.footer{
-    text-align:center;
-    color:var(--muted);
-    font-size:.9rem;
-    margin-top:10px;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container">
-
-<div class="card">
-
-<h1>cloudzzy status</h1>
-
-<p class="subtitle">
-account status for my discord. check back regularly if you want. still working on this so dont call it atrocious.
-</p>
-
-<h2>Status</h2>
-
-<p>
-<strong>regularly online</strong>
-</p>
-
-<h2>Current Discord account</h2>
-
-<p>
-<strong>tuff.kid</strong>
-</p>
-
-<h2>Identity</h2>
-
-<p>
-If my Discord account is ever banned, deleted, hacked, renamed, or replaced,
-my new account (and active) will always be announced here first.
-</p>
-
-<p style="margin-top:12px;">
-If an account, message, or announcement conflicts with the information on here,
-assume that <strong>this page is correct.</strong>
-</p>
-
-<h2>Links</h2>
-
-<ul>
-<li><a href="https://github.com/cloudzzyy">GitHub</a></li>
-<li><a href="https://cloudzzyy.github.io/">Homepage (not built yet)</a></li>
-<li><a href="https://guns.lol/cloudzzy/">guns.lol</a></li>
-</ul>
-
-<h2>Previous Accounts</h2>
-
-<p>
-None.
-</p>
-
-<h2>Last Updated</h2>
-
-<p>
-8 August 2026
-</p>
-
+<div class="ambient" aria-hidden="true">
+  <span class="a1"></span>
+  <span class="a2"></span>
+  <span class="a3"></span>
 </div>
 
-<div class="footer">
-Hosted with GitHub Pages, built by me, cloudzzyy.github.io
+<div class="page">
+  <div class="shell glass">
+
+    <!-- ==============================================================
+         STATUS
+         All values here (name, discord username, status text, dates,
+         the verify badge, and the share link) are rendered by
+         script.js from siteData — see the EDIT THIS SECTION comment
+         near the top of that file.
+         ============================================================== -->
+    <section class="view active" id="status">
+      <div class="identity">
+        <span class="brand-name" id="brandName"></span>
+        <span class="record-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          official
+        </span>
+      </div>
+
+      <p class="tagline">account status for my discord. check back regularly if you want. still working on this so dont call it atrocious.</p>
+
+      <div class="divider"></div>
+
+      <div class="discord-name" id="discordName"></div>
+
+      <div class="status-live" id="statusLive"></div>
+
+      <div class="verify-badge" id="verifyBadge"></div>
+
+      <div class="share-row">
+        <span class="share-label">Share this page</span>
+        <button class="copy-btn" type="button" id="copyStatusLinkBtn">copy link</button>
+      </div>
+
+      <div class="contact-block">
+        <span class="contact-title">Can't reach me anywhere else?</span>
+        <span class="contact-sub">If you need to contact me and can't reach me through Discord, you can leave me a message here.</span>
+        <button class="btn-primary" type="button" id="openContactBtn">Send me a message</button>
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         ACCOUNTS
+         Rows are generated by script.js from siteData.accounts (plus
+         the Discord row, from siteData.identity.discord).
+         ============================================================== -->
+    <section class="view" id="accounts">
+      <div class="area-heading"><span class="bar"></span><h2>Official accounts</h2></div>
+
+      <div id="accountsList"></div>
+    </section>
+
+    <!-- ==============================================================
+         VERIFY
+         ============================================================== -->
+    <section class="view" id="verify">
+      <div class="area-heading"><span class="bar"></span><h2>Verification</h2></div>
+
+      <div class="verify-text">
+        <p>If my Discord account is ever banned, deleted, hacked, renamed, or replaced, my new account (and active) will always be announced here first.</p>
+        <p>If an account, message, or announcement conflicts with the information on here, assume that <strong>this page is correct</strong>, not the account.</p>
+      </div>
+
+      <div class="verify-current" id="verifyCurrent"></div>
+    </section>
+
+    <!-- ==============================================================
+         HISTORY  (change log + previous accounts)
+         Both lists are generated by script.js from siteData.changelog
+         and siteData.history — see the EDIT THIS SECTION comment in
+         script.js to add entries.
+         ============================================================== -->
+    <section class="view" id="history">
+      <div class="area-heading"><span class="bar"></span><h2>Change log</h2></div>
+
+      <div class="log" id="changelogList"></div>
+
+      <div class="sub-divider"></div>
+
+      <div class="area-heading small"><span class="bar"></span><h2>Previous accounts</h2></div>
+
+      <div id="historyList"></div>
+    </section>
+
+  </div>
 </div>
 
+<!-- ==================================================================
+     NAVIGATION — one glass capsule, four items. data-target values
+     must match the section ids above (status, accounts, verify,
+     history).
+     ================================================================== -->
+<nav class="navbar" aria-label="Section navigation">
+  <div class="nav-pill" aria-hidden="true"></div>
+  <div class="nav-travel" aria-hidden="true"><span></span></div>
+
+  <button class="nav-item active" type="button" data-target="status" aria-current="true">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" opacity="0.4"/></svg>
+    </span>
+    <span class="nav-label"><span>Status</span></span>
+  </button>
+
+  <button class="nav-item" type="button" data-target="accounts" aria-current="false">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.66 0l2-2a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-2 2a4 4 0 0 0 5.66 5.66l1-1"/></svg>
+    </span>
+    <span class="nav-label"><span>Accounts</span></span>
+  </button>
+
+  <button class="nav-item" type="button" data-target="verify" aria-current="false">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
+    </span>
+    <span class="nav-label"><span>Verify</span></span>
+  </button>
+
+  <button class="nav-item" type="button" data-target="history" aria-current="false">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+    </span>
+    <span class="nav-label"><span>History</span></span>
+  </button>
+</nav>
+
+<!-- ==================================================================
+     CONTACT MODAL — opened by the "Send me a message" button on the
+     Status view. Submits to Formspree (see siteData.contact in
+     script.js for the endpoint). The form's own action/method are a
+     real HTML POST as a fallback if JavaScript ever fails to run;
+     script.js intercepts the submit for the in-page experience.
+     ================================================================== -->
+<div class="modal-backdrop" id="contactBackdrop">
+  <div class="modal-panel glass" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+    <div class="modal-head">
+      <h3 id="contactModalTitle">Message me</h3>
+      <button class="modal-close" type="button" id="contactCloseBtn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <form id="contactForm" action="https://formspree.io/f/mrpzpajk" method="POST">
+      <input type="hidden" name="_subject" value="New message from cloudzzy.github.io">
+
+      <div class="field">
+        <label for="contactName">Name <span class="optional">(optional)</span></label>
+        <input type="text" id="contactName" name="name" autocomplete="name" maxlength="120">
+      </div>
+
+      <div class="field">
+        <label for="contactEmail">Reply email <span class="optional">(optional)</span></label>
+        <input type="email" id="contactEmail" name="email" autocomplete="email" maxlength="200">
+      </div>
+
+      <div class="field">
+        <label for="contactMessage">Message</label>
+        <textarea id="contactMessage" name="message" rows="4" required maxlength="4000"></textarea>
+      </div>
+
+      <p class="form-status" id="contactStatus" role="status" aria-live="polite"></p>
+
+      <div class="form-actions">
+        <button class="btn-primary" type="submit" id="contactSubmitBtn">Send message</button>
+      </div>
+    </form>
+
+    <div class="modal-success" id="contactSuccess" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <p>Message sent.</p>
+      <button class="copy-btn" type="button" id="contactAgainBtn">send another</button>
+    </div>
+  </div>
 </div>
 
+<script src="script.js"></script>
 </body>
 </html>
